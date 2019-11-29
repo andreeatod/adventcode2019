@@ -1,5 +1,6 @@
 public class App {
 
+    //more to come the following days
     public static void main(String[] args) {
         System.out.println("Hello there!");
         System.out.println("This will be my try for AdventOfCode2019!");
