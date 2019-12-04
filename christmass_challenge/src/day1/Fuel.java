@@ -1,17 +1,15 @@
 package day1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import common.ReadFromFile;
+
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Fuel {
 
     public static void main(String[] args) {
         String fileName = "christmass_challenge/src/day1/dayOne.txt";
-        List<Integer> modules = getModules(fileName);
+        List<Integer> modules = ReadFromFile.readIntegers(fileName);
 
         List<Integer> requiredFuel = modules.stream()
                 .map(Fuel::getRequiredFuel)
@@ -44,20 +42,5 @@ public class Fuel {
 
     private static int getRequiredFuel(int module) {
         return module / 3 - 2;
-    }
-
-    private static List<Integer> getModules(String fileName) {
-        List<Integer> modules = new ArrayList<>();
-
-        try {
-            Scanner scanner = new Scanner(new File(fileName));
-            while (scanner.hasNext()) {
-                modules.add(scanner.nextInt());
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println("File not found!");
-        }
-
-        return modules;
     }
 }
