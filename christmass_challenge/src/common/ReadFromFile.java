@@ -1,7 +1,6 @@
 package common;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -36,5 +35,23 @@ public class ReadFromFile {
         }
 
         return words;
+    }
+
+    public static List<Integer> readCharacterAsIntegers(String fileName) {
+        List<Integer> integers = new ArrayList<>();
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            int c;
+            while ((c = reader.read()) != -1) {
+                integers.add(c - '0');
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found!");
+        } catch (IOException ex) {
+            System.out.println("Something went wrong while parsing file\n" + ex);
+        }
+
+        return integers;
     }
 }
