@@ -13,15 +13,7 @@ public class Amplifier {
         String fileName = "christmass_challenge/src/day7/daySeven.txt";
         input.addAll(ReadFromFile.readIntegers(fileName));
 
-        List<Integer> possibleValues = new ArrayList<>();
-        possibleValues.add(0);
-        possibleValues.add(1);
-        possibleValues.add(2);
-        possibleValues.add(3);
-        possibleValues.add(4);
-
-        List<List<Integer>> combos = new ArrayList<>();
-        printAllRecursive(5, possibleValues, combos);
+        List<List<Integer>> combos = generatePermutations();
 
         int max = Integer.MIN_VALUE;
 
@@ -39,27 +31,27 @@ public class Amplifier {
         System.out.println("Highest signal " + max);
     }
 
-    public static void printAllRecursive(int n, List<Integer> elements, List<List<Integer>> combos) {
-
-        if (n == 1) {
-            combos.add(elements);
-        } else {
-            for (int i = 0; i < n - 1; i++) {
-                printAllRecursive(n - 1, elements, combos);
-                if (n % 2 == 0) {
-                    swap(elements, i, n - 1);
-                } else {
-                    swap(elements, 0, n - 1);
-                }
-            }
-            printAllRecursive(n - 1, elements, combos);
+    private static void backtracking(List<List<Integer>> list, List<Integer> generated, int recursionDepth) {
+        if (recursionDepth == 5) {
+            list.add(new ArrayList<>(generated));
+            return;
         }
+        for (int i = 0; i < 5; ++i)
+            if (!generated.contains(i)) {
+                generated.add(i);
+                backtracking(list, generated, recursionDepth + 1);
+                generated.remove(recursionDepth);
+            }
     }
 
-    private static void swap(List<Integer> input, int a, int b) {
-        Integer tmp = input.get(a);
-        input.set(a, input.get(b));
-        input.set(b, tmp);
+    private static void backtracking(List<List<Integer>> list) {
+        backtracking(list, new ArrayList<Integer>(), 0);
+    }
+
+    protected static List<List<Integer>> generatePermutations() {
+        List<List<Integer>> ans = new ArrayList<>();
+        backtracking(ans);
+        return ans;
     }
 
     private static List<Integer> copyInput(List<Integer> input) {
@@ -70,22 +62,26 @@ public class Amplifier {
         boolean firstInput = true;
         for (int i = 0; i < input.size(); ) {
             Instruction instruction = decodeInstruction(input.get(i));
-            int r = input.get(i + 3);
 
             switch (instruction.operation) {
                 case 1:
                     int f = getNumber(instruction.firstParam, input.get(i + 1), input);
                     int s = getNumber(instruction.secondParam, input.get(i + 2), input);
+                    int r = input.get(i + 3);
+
                     input.set(r, f + s);
                     i += 4;
                     break;
                 case 2:
                     int ff = getNumber(instruction.firstParam, input.get(i + 1), input);
                     int ss = getNumber(instruction.secondParam, input.get(i + 2), input);
+                    r = input.get(i + 3);
+
                     input.set(r, ff * ss);
                     i += 4;
                     break;
                 case 3:
+                    r = input.get(i + 1);
                     if (firstInput) {
                         input.set(r, initialCode);
                         firstInput = false;
@@ -118,6 +114,8 @@ public class Amplifier {
                 case 7:
                     int ffpp = getNumber(instruction.firstParam, input.get(i + 1), input);
                     int sspp = getNumber(instruction.secondParam, input.get(i + 2), input);
+                    r = input.get(i + 3);
+
                     if (ffpp < sspp) {
                         input.set(r, 1);
                     } else {
@@ -128,6 +126,8 @@ public class Amplifier {
                 case 8:
                     int ffppp = getNumber(instruction.firstParam, input.get(i + 1), input);
                     int ssppp = getNumber(instruction.secondParam, input.get(i + 2), input);
+                    r = input.get(i + 3);
+
                     if (ffppp == ssppp) {
                         input.set(r, 1);
                     } else {
